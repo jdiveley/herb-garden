@@ -1,0 +1,80 @@
+.how {
+  padding: 5rem 0;
+  background: var(--parchment);
+  margin: 0 -1.5rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  border-top: 1px solid var(--dust);
+  border-bottom: 1px solid var(--dust);
+}
+
+.how__header { margin-bottom: 3rem; }
+
+.how__title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: var(--ink);
+}
+
+.how__steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2.5rem;
+  margin-bottom: 3rem;
+}
+
+.how__step {
+  position: relative;
+}
+
+.how__step-number {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 600;
+  color: var(--mist);
+  line-height: 1;
+  margin-bottom: 0.25rem;
+  user-select: none;
+}
+
+.how__step-icon {
+  font-size: 1.6rem;
+  margin-bottom: 0.75rem;
+  margin-top: -1.2rem;
+}
+
+.how__step-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.how__step-body {
+  font-family: var(--font-accent);
+  font-size: 0.98rem;
+  color: var(--bark);
+  line-height: 1.7;
+}
+
+.how__note {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: white;
+  border: 1px solid var(--dust);
+  border-left: 3px solid var(--sage);
+  padding: 1.2rem 1.5rem;
+  border-radius: 2px;
+  max-width: 560px;
+}
+
+.how__note-leaf { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+
+.how__note p {
+  font-family: var(--font-accent);
+  font-size: 0.98rem;
+  color: var(--bark);
+  font-style: italic;
+  line-height: 1.7;
+}

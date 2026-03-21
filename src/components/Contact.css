@@ -1,0 +1,123 @@
+.contact {
+  padding: 5rem 0 6rem;
+  max-width: 560px;
+}
+
+.contact__title {
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  color: var(--ink);
+  margin-bottom: 0.75rem;
+}
+
+.contact__subtitle {
+  font-family: var(--font-accent);
+  font-size: 1.05rem;
+  color: var(--bark);
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+}
+
+/* Form */
+.contact__form { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.contact__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.contact__field label {
+  font-family: var(--font-accent);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sage);
+}
+
+.contact__field input,
+.contact__field textarea {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--ink);
+  background: white;
+  border: 1px solid var(--dust);
+  border-radius: 2px;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  resize: vertical;
+}
+
+.contact__field input:focus,
+.contact__field textarea:focus {
+  outline: none;
+  border-color: var(--sage);
+  box-shadow: 0 0 0 3px rgba(106, 138, 94, 0.12);
+}
+
+.contact__field input::placeholder,
+.contact__field textarea::placeholder {
+  color: var(--dust);
+  font-style: italic;
+}
+
+.contact__submit {
+  align-self: flex-start;
+  font-family: var(--font-accent);
+  font-size: 0.95rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--moss);
+  color: var(--cream);
+  border: none;
+  padding: 0.85rem 2rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.contact__submit:hover {
+  background: var(--fern);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(61, 90, 54, 0.25);
+}
+
+.contact__note {
+  font-family: var(--font-accent);
+  font-size: 0.85rem;
+  color: var(--dust);
+  font-style: italic;
+}
+
+/* Thank you */
+.contact__thanks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: var(--mist);
+  border: 1px solid var(--leaf);
+  border-radius: 4px;
+  padding: 2rem;
+  animation: fade-up 0.4s ease;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.contact__thanks-icon { font-size: 2rem; }
+
+.contact__thanks h3 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--moss);
+}
+
+.contact__thanks p {
+  font-family: var(--font-accent);
+  font-size: 1rem;
+  color: var(--bark);
+  line-height: 1.7;
+}

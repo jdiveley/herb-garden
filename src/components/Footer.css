@@ -1,0 +1,39 @@
+.footer {
+  border-top: 1px solid var(--dust);
+  padding: 2.5rem 0;
+  margin-top: 2rem;
+}
+
+.footer__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footer__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer__icon { font-size: 1.1rem; }
+
+.footer__name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--moss);
+}
+
+.footer__tagline {
+  font-family: var(--font-accent);
+  font-size: 0.9rem;
+  color: var(--bark);
+}
+
+.footer__copy {
+  font-family: var(--font-accent);
+  font-size: 0.8rem;
+  color: var(--dust);
+  margin-top: 0.25rem;
+}

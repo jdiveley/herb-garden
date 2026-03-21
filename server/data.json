@@ -1,0 +1,119 @@
+{
+  "hero": {
+    "eyebrow": "Narangba, QLD · Est. 2025",
+    "title": "Fresh herbs,",
+    "titleEmphasis": "free for neighbors",
+    "description": "Blackpaw Cottage is a small home garden tucked behind a cedar fence. When the season blesses us with more basil, rosemary, or mint than we can use — we share. No strings, no sign-ups, just good growing."
+  },
+  "about": {
+    "paragraph1": "In 2024, my life was turned upside down. But what started out as a story of heartbreak turned into one of the most transformative years of my life. Not only did I learn what I'm truly capable of, but it brought me to Cooper; my adorable black Cocker Spaniel (you may have heard him 🙈), who ultimately led us here to Blackpaw Cottage - the first place in a really long time where I feel truly...home.",
+    "paragraph2": "I'm sure by now you can guess what (or rather, who) inspired the name Blackpaw Cottage - but what most don't know is that I'm the kind of dog mum who buys a house so her baby can have a big backyard to run around in. What I didn't account for was that backyards don't magically look after themselves - especially not one lovingly created by someone who poured her heart and soul into it; from herbs and fruit trees to beautiful native flowers.\n\nOver the past 12 months, I've been fumbling my way through figuring out how to keep it all alive - and through absolute luck (and a little naive optimism), my garden is not just surviving, it's somehow... thriving.",
+    "paragraph3": "I'm now growing a lot more than I can use and because my love language is acts of service, I  shared a post in our Facebook group asking if anyone in our community would like some of my excess herbs. And to my delight - so many of you said yes!\n\nI love going the extra mile, especially if I think it'll make someone smile, so instead of just handing you a bunch of herbs, I had some cute gift tags designed so that I could leave little handwritten notes from Cooper and I.\n\nOne of my closest friends has been watching all of this unfold and I mentioned recently how fun it would be to have a website my neighbours could \"order from\" instead of trying to keep track of all the  comments and DMs each time I post.\n\nHe immediately took that idea and brought this amazing website to life for me!",
+    "signature": "With love, Tami & Cooper xx"
+  },
+  "photos": [
+    {
+      "id": 1773966773585,
+      "filename": "1773966773379.jpeg",
+      "caption": "Cool Cat",
+      "rotation": 0,
+      "width": 100
+    },
+    {
+      "id": 1773966804275,
+      "filename": "1773966804054.jpg",
+      "caption": "Regal Cooper",
+      "rotation": 0,
+      "width": 100
+    },
+    {
+      "id": 1773994678215,
+      "filename": "1773994678213.jpg",
+      "caption": "",
+      "rotation": 0,
+      "width": 100
+    }
+  ],
+  "herbs": [
+    {
+      "id": 1,
+      "name": "Sweet Basil",
+      "emoji": "🌿",
+      "status": "available",
+      "quantity": "Plenty",
+      "description": "Large, fragrant leaves perfect for caprese, pesto, or tossing fresh into pasta. The Italian classic.",
+      "tip": "Pick from the top to encourage bushy growth.",
+      "season": "Peak season"
+    },
+    {
+      "id": 2,
+      "name": "Rosemary",
+      "emoji": "🌲",
+      "status": "available",
+      "quantity": "A few bundles",
+      "description": "Woody stems full of piney aroma. Great for roasted meats, bread, or in a vase on the windowsill.",
+      "tip": "Cut 4-6 inch sprigs, just above a leaf node.",
+      "season": "Year-round"
+    },
+    {
+      "id": 3,
+      "name": "Spearmint",
+      "emoji": "🍃",
+      "status": "available",
+      "quantity": "Abundant",
+      "description": "Cool, clean mint for tea, mojitos, tabbouleh, or just a sprig in a glass of water.",
+      "tip": "Best harvested in the morning before it gets hot.",
+      "season": "Peak season"
+    },
+    {
+      "id": 4,
+      "name": "Flat-Leaf Parsley",
+      "emoji": "🌱",
+      "status": "limited",
+      "quantity": "Last few bunches",
+      "description": "Bright, grassy flavor — far better fresh than dried. Goes with almost everything savory.",
+      "tip": "Cut outer stems at the base to keep it producing.",
+      "season": "Wrapping up"
+    },
+    {
+      "id": 5,
+      "name": "Lemon Thyme",
+      "emoji": "🌼",
+      "status": "available",
+      "quantity": "Good supply",
+      "description": "Tiny leaves with a citrusy twist on classic thyme. Wonderful with fish, poultry, or desserts.",
+      "tip": "The flavor is most intense before it flowers.",
+      "season": "Peak season"
+    },
+    {
+      "id": 6,
+      "name": "Chives",
+      "emoji": "🪴",
+      "status": "coming-soon",
+      "quantity": "Coming soon",
+      "description": "Mild, oniony flavor for topping eggs, potatoes, and soups. The purple flowers are edible too.",
+      "tip": "Will be ready to share in 2-3 weeks.",
+      "season": "Coming soon"
+    },
+    {
+      "id": 7,
+      "name": "Oregano",
+      "emoji": "🍀",
+      "status": "gone",
+      "quantity": "Out for now",
+      "description": "The backbone of Italian and Greek cooking. We harvested heavily this year — resting the plant.",
+      "tip": "Check back in late summer.",
+      "season": "Resting"
+    },
+    {
+      "id": 8,
+      "name": "Tarragon",
+      "emoji": "✦",
+      "status": "available",
+      "quantity": "Small batch",
+      "description": "Anise-like and distinctly French. Elevates chicken, eggs, and cream sauces to something special.",
+      "tip": "A little goes a long way — use sparingly.",
+      "season": "In season"
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+/* ── Reset & Base ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream:      #f5f0e8;
+  --parchment:  #ede5d0;
+  --bark:       #6b4f35;
+  --moss:       #3d5a36;
+  --sage:       #6a8a5e;
+  --fern:       #4e7248;
+  --leaf:       #8aab7a;
+  --dust:       #a89880;
+  --ink:        #2a2018;
+  --mist:       #dce8d4;
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'EB Garamond', Georgia, serif;
+  --font-accent:  'Raleway', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.7;
+  min-height: 100vh;
+
+  /* Subtle paper grain */
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.25; }
+
+a { color: var(--moss); text-decoration: none; }
+a:hover { color: var(--fern); }
+
+img { max-width: 100%; display: block; }
+
+::selection { background: var(--mist); color: var(--moss); }
+
+/* ── Scrollbar ────────────────────────────────── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--parchment); }
+::-webkit-scrollbar-thumb { background: var(--leaf); border-radius: 4px; }
+
+/* ── Utility ──────────────────────────────────── */
+.section-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--dust), transparent);
+  margin: 3rem 0;
+}
+
+.section-label {
+  font-family: var(--font-accent);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.section-label::before {
+  content: '';
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background: var(--sage);
+  flex-shrink: 0;
+}
