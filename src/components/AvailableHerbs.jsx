@@ -8,12 +8,20 @@ const STATUS_LABELS = {
   gone:          { label: 'Gone for now', color: 'var(--dust)' },
 }
 
-export default function AvailableHerbs({ herbs = [] }) {
+export default function AvailableHerbs({ herbs = [], orchard = [] }) {
+  const [view, setView] = useState('herbs')
   const [filter, setFilter] = useState('all')
   const [expanded, setExpanded] = useState(null)
 
+  const items = view === 'herbs' ? herbs : orchard
   const filters = ['all', 'available', 'limited', 'coming-soon']
-  const visible = herbs.filter(h => filter === 'all' ? true : h.status === filter)
+  const visible = items.filter(h => filter === 'all' ? true : h.status === filter)
+
+  const switchView = (v) => {
+    setView(v)
+    setFilter('all')
+    setExpanded(null)
+  }
 
   return (
     <section id="herbs" className="herbs">
@@ -26,6 +34,17 @@ export default function AvailableHerbs({ herbs = [] }) {
         </p>
       </div>
 
+      <div className="herbs__toggle">
+        <button
+          className={`herbs__toggle-btn ${view === 'herbs' ? 'active' : ''}`}
+          onClick={() => switchView('herbs')}
+        >Herb Garden</button>
+        <button
+          className={`herbs__toggle-btn ${view === 'orchard' ? 'active' : ''}`}
+          onClick={() => switchView('orchard')}
+        >Orchard</button>
+      </div>
+
       <div className="herbs__filters">
         {filters.map(f => (
           <button
@@ -33,34 +52,36 @@ export default function AvailableHerbs({ herbs = [] }) {
             className={`herbs__filter-btn ${filter === f ? 'active' : ''}`}
             onClick={() => setFilter(f)}
           >
-            {f === 'all' ? 'All herbs' : STATUS_LABELS[f]?.label}
+            {f === 'all'
+              ? (view === 'herbs' ? 'All herbs' : 'All fruit')
+              : STATUS_LABELS[f]?.label}
           </button>
         ))}
       </div>
 
       <div className="herbs__grid">
-        {visible.map(herb => (
+        {visible.map(item => (
           <article
-            key={herb.id}
-            className={`herb-card herb-card--${herb.status} ${expanded === herb.id ? 'herb-card--expanded' : ''}`}
-            onClick={() => setExpanded(expanded === herb.id ? null : herb.id)}
+            key={item.id}
+            className={`herb-card herb-card--${item.status} ${expanded === item.id ? 'herb-card--expanded' : ''}`}
+            onClick={() => setExpanded(expanded === item.id ? null : item.id)}
           >
             <div className="herb-card__top">
-              <span className="herb-card__emoji">{herb.emoji}</span>
+              <span className="herb-card__emoji">{item.emoji}</span>
               <div className="herb-card__meta">
-                <span className="herb-card__status" style={{ color: STATUS_LABELS[herb.status]?.color }}>
-                  {STATUS_LABELS[herb.status]?.label}
+                <span className="herb-card__status" style={{ color: STATUS_LABELS[item.status]?.color }}>
+                  {STATUS_LABELS[item.status]?.label}
                 </span>
-                <h3 className="herb-card__name">{herb.name}</h3>
-                <p className="herb-card__qty">{herb.quantity}</p>
+                <h3 className="herb-card__name">{item.name}</h3>
+                <p className="herb-card__qty">{item.quantity}</p>
               </div>
-              <span className="herb-card__arrow">{expanded === herb.id ? '−' : '+'}</span>
+              <span className="herb-card__arrow">{expanded === item.id ? '−' : '+'}</span>
             </div>
-            {expanded === herb.id && (
+            {expanded === item.id && (
               <div className="herb-card__details">
-                <p className="herb-card__desc">{herb.description}</p>
-                <p className="herb-card__tip"><strong>Harvesting tip:</strong> {herb.tip}</p>
-                {(herb.status === 'available' || herb.status === 'limited') && (
+                <p className="herb-card__desc">{item.description}</p>
+                <p className="herb-card__tip"><strong>Tip:</strong> {item.tip}</p>
+                {(item.status === 'available' || item.status === 'limited') && (
                   <a href="#contact" className="herb-card__claim">Claim some →</a>
                 )}
               </div>

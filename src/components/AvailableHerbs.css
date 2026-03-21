@@ -27,6 +27,42 @@
   line-height: 1.7;
 }
 
+/* Toggle */
+.herbs__toggle {
+  display: flex;
+  gap: 0;
+  margin-bottom: 2rem;
+  border: 2px solid var(--moss);
+  border-radius: 4px;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.herbs__toggle-btn {
+  font-family: var(--font-accent);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.75rem 2rem;
+  border: none;
+  background: transparent;
+  color: var(--moss);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.herbs__toggle-btn:not(:last-child) {
+  border-right: 2px solid var(--moss);
+}
+.herbs__toggle-btn:hover {
+  background: var(--mist);
+}
+.herbs__toggle-btn.active {
+  background: var(--moss);
+  color: var(--cream);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.15);
+}
+
 /* Filters */
 .herbs__filters {
   display: flex;

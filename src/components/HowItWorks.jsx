@@ -11,7 +11,7 @@ const STEPS = [
   {
     number: '02',
     title: 'Send a quick message',
-    body: "Drop us a note through the contact form — just say which herbs you'd like and roughly when you might stop by.",
+    body: "Drop us a note through the contact form — just say which herbs (or orchard picks) you'd like and roughly when you might stop by.",
     icon: '✉️',
   },
   {

@@ -31,6 +31,10 @@ export default function AboutEditor({ data, onSave, saving }) {
           <textarea rows={3} value={form.paragraph3} onChange={set('paragraph3')} />
         </div>
         <div className="admin-field">
+          <label>Fourth paragraph</label>
+          <textarea rows={3} value={form.paragraph4 || ''} onChange={set('paragraph4')} />
+        </div>
+        <div className="admin-field">
           <label>Signature <span>(shown as italic sign-off)</span></label>
           <input value={form.signature} onChange={set('signature')} placeholder="e.g. The gardeners at Blackpaw Cottage" />
         </div>
@@ -39,7 +43,7 @@ export default function AboutEditor({ data, onSave, saving }) {
       <div className="admin-preview">
         <p className="admin-preview__label">Preview</p>
         <div className="admin-preview__box">
-          {[form.paragraph1, form.paragraph2, form.paragraph3].map((p, i) => (
+          {[form.paragraph1, form.paragraph2, form.paragraph3, form.paragraph4].map((p, i) => (
             <p key={i} style={{ color: '#6b4f35', fontSize: '1rem', lineHeight: 1.85, marginBottom: '1rem' }}>{p}</p>
           ))}
           <p style={{ color: '#6a8a5e', fontStyle: 'italic', fontSize: '0.95rem' }}>

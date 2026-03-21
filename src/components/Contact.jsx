@@ -3,29 +3,39 @@ import './Contact.css'
 
 export default function Contact() {
   const [form, setForm] = useState({ name: '', message: '' })
-  const [sent, setSent] = useState(false)
+  const [status, setStatus] = useState('idle') // idle | sending | sent | error
 
   const handleChange = e =>
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // In production: wire up to Formspree, Netlify Forms, EmailJS, etc.
-    setSent(true)
+    setStatus('sending')
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (!res.ok) throw new Error()
+      setStatus('sent')
+    } catch {
+      setStatus('error')
+    }
   }
 
   return (
     <section id="contact" className="contact">
       <div className="contact__header">
         <p className="section-label">Get in touch</p>
-        <h2 className="contact__title">Request Some Herbs</h2>
+        <h2 className="contact__title">Request from the Garden</h2>
         <p className="contact__subtitle">
-          Let us know what you'd like and we'll set a bundle aside for you.
+          Let us know which herbs you'd like — or anything from the orchard — and we'll set it aside for you.
           We usually respond within a day.
         </p>
       </div>
 
-      {sent ? (
+      {status === 'sent' ? (
         <div className="contact__thanks">
           <span className="contact__thanks-icon">🌿</span>
           <h3>Message received!</h3>
@@ -62,8 +72,14 @@ export default function Contact() {
             />
           </div>
 
-          <button type="submit" className="contact__submit">
-            Send Message
+          {status === 'error' && (
+            <p className="contact__error">
+              Something went wrong sending your message. Please try again.
+            </p>
+          )}
+
+          <button type="submit" className="contact__submit" disabled={status === 'sending'}>
+            {status === 'sending' ? 'Sending...' : 'Send Message'}
           </button>
 
           <p className="contact__note">

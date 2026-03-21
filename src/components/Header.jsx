@@ -20,9 +20,9 @@ export default function Header() {
         </a>
 
         <nav className={`header__nav ${menuOpen ? 'header__nav--open' : ''}`}>
-          <a href="#herbs" onClick={() => setMenuOpen(false)}>Available Herbs</a>
+          <a href="#herbs" onClick={() => setMenuOpen(false)}>What's Available</a>
           <a href="#how-it-works" onClick={() => setMenuOpen(false)}>How It Works</a>
-          <a href="#about" onClick={() => setMenuOpen(false)}>The Garden</a>
+          <a href="#about" onClick={() => setMenuOpen(false)}>Our Story <span className="header__heart">♥</span></a>
           <a href="#contact" className="header__nav-cta" onClick={() => setMenuOpen(false)}>Get in Touch</a>
         </nav>
 

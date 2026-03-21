@@ -2,20 +2,22 @@ import React from 'react'
 import './AboutGarden.css'
 
 export default function AboutGarden({ data, photos = [] }) {
+  const galleryPhotos = photos.filter(p => !p.heroImage)
   if (!data) return null
   return (
-    <section id="about" className={`about${photos.length === 0 ? ' about--no-photos' : ''}`}>
+    <section id="about" className={`about${galleryPhotos.length === 0 ? ' about--no-photos' : ''}`}>
       <div className="about__text">
         <p className="section-label">The story</p>
         <h2 className="about__title">About Blackpaw Cottage</h2>
         <p>{data.paragraph1}</p>
         <p>{data.paragraph2}</p>
         <p>{data.paragraph3}</p>
+        <p>{data.paragraph4}</p>
         <p className="about__sign">— <em>{data.signature}</em></p>
       </div>
-      {photos.length > 0 && (
+      {galleryPhotos.length > 0 && (
         <div className="about__photos">
-          {photos.map(photo => (
+          {galleryPhotos.map(photo => (
             <div
               key={photo.id}
               className="about__photo-item"

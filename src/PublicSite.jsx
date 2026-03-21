@@ -30,7 +30,7 @@ export default function PublicSite() {
       <Header />
       <main>
         <Hero data={siteData.hero} />
-        <AvailableHerbs herbs={siteData.herbs} />
+        <AvailableHerbs herbs={siteData.herbs} orchard={siteData.orchard} />
         <HowItWorks />
         <AboutGarden data={siteData.about} photos={siteData.photos} />
         <Contact />

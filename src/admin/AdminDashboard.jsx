@@ -7,10 +7,11 @@ import PhotosEditor from './PhotosEditor.jsx'
 import './Admin.css'
 
 const TABS = [
-  { id: 'herbs', label: '🌿 Herbs' },
-  { id: 'hero',  label: '🏠 Homepage Text' },
-  { id: 'about', label: '📖 About Section' },
-  { id: 'photos', label: '📷 Garden Photos' },
+  { id: 'herbs',   label: '🌿 Herbs' },
+  { id: 'orchard', label: '🍋 Orchard' },
+  { id: 'hero',    label: '🏠 Homepage Text' },
+  { id: 'about',   label: '📖 About Section' },
+  { id: 'photos',  label: '📷 Garden Photos' },
 ]
 
 export default function AdminDashboard() {
@@ -95,6 +96,26 @@ export default function AdminDashboard() {
     } catch { showToast('Error deleting photo.') }
   }
 
+  const addOrchardItem = async (item) => {
+    const res = await fetch('/api/orchard', { method: 'POST', headers: authHeaders, body: JSON.stringify(item) })
+    const newItem = await res.json()
+    setSiteData(d => ({ ...d, orchard: [...(d.orchard || []), newItem] }))
+    showToast(`${newItem.name} added!`)
+  }
+
+  const updateOrchardItem = async (id, updates) => {
+    const res = await fetch(`/api/orchard/${id}`, { method: 'PUT', headers: authHeaders, body: JSON.stringify(updates) })
+    const updated = await res.json()
+    setSiteData(d => ({ ...d, orchard: (d.orchard || []).map(h => h.id === id ? updated : h) }))
+    showToast('Item updated!')
+  }
+
+  const deleteOrchardItem = async (id) => {
+    await fetch(`/api/orchard/${id}`, { method: 'DELETE', headers: authHeaders })
+    setSiteData(d => ({ ...d, orchard: (d.orchard || []).filter(h => h.id !== id) }))
+    showToast('Item removed.')
+  }
+
   const addHerb = async (herb) => {
     const res = await fetch('/api/herbs', { method: 'POST', headers: authHeaders, body: JSON.stringify(herb) })
     const newHerb = await res.json()
@@ -157,6 +178,9 @@ export default function AdminDashboard() {
       <main className="admin-content">
         {tab === 'herbs' && (
           <HerbsEditor herbs={siteData.herbs} onAdd={addHerb} onUpdate={updateHerb} onDelete={deleteHerb} saving={saving} />
+        )}
+        {tab === 'orchard' && (
+          <HerbsEditor herbs={siteData.orchard || []} onAdd={addOrchardItem} onUpdate={updateOrchardItem} onDelete={deleteOrchardItem} saving={saving} label="Orchard Item" />
         )}
         {tab === 'hero' && (
           <HeroEditor data={siteData.hero} onSave={saveHero} saving={saving} />

@@ -23,17 +23,8 @@ export default function Hero({ data }) {
         </div>
       </div>
 
-      <div className="hero__illustration" aria-hidden="true">
-        <div className="hero__pot">
-          <div className="hero__pot-body">
-            <div className="hero__plant">
-              <span className="hero__leaf hero__leaf--1">🌿</span>
-              <span className="hero__leaf hero__leaf--2">🌱</span>
-              <span className="hero__leaf hero__leaf--3">🌿</span>
-              <span className="hero__leaf hero__leaf--4">🌾</span>
-            </div>
-          </div>
-        </div>
+      <div className="hero__illustration">
+        <img src="/uploads/1774130148395.jpeg" alt="Blackpaw Cottage garden" className="hero__photo" />
       </div>
     </section>
   )

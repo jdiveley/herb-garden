@@ -60,6 +60,12 @@
   color: var(--moss);
 }
 
+.header__heart {
+  font-size: 1.4em;
+  color: #c0392b;
+  vertical-align: middle;
+}
+
 .header__nav-cta {
   background: var(--moss);
   color: var(--cream) !important;

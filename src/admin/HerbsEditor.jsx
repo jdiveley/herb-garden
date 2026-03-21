@@ -13,7 +13,7 @@ const EMPTY_HERB = {
   quantity: '', description: '', tip: '', season: ''
 }
 
-export default function HerbsEditor({ herbs, onAdd, onUpdate, onDelete }) {
+export default function HerbsEditor({ herbs, onAdd, onUpdate, onDelete, label = 'Herb' }) {
   const [editing, setEditing] = useState(null)   // herb id being edited
   const [editForm, setEditForm] = useState({})
   const [adding, setAdding] = useState(false)
@@ -49,21 +49,21 @@ export default function HerbsEditor({ herbs, onAdd, onUpdate, onDelete }) {
     <div className="herbs-editor">
       <div className="admin-section-header">
         <div>
-          <h2>Herb Availability</h2>
+          <h2>{label} Availability</h2>
           <p>Manage what's in season and ready to share.</p>
         </div>
         <button className="admin-btn admin-btn--primary" onClick={() => { setAdding(true); setEditing(null) }}>
-          + Add Herb
+          + Add {label}
         </button>
       </div>
 
       {/* Add form */}
       {adding && (
         <div className="herb-form herb-form--new">
-          <h3>New Herb</h3>
+          <h3>New {label}</h3>
           <HerbFormFields form={newForm} onChange={setNewForm} />
           <div className="herb-form__actions">
-            <button className="admin-btn admin-btn--primary" onClick={handleAdd}>Add Herb</button>
+            <button className="admin-btn admin-btn--primary" onClick={handleAdd}>Add {label}</button>
             <button className="admin-btn admin-btn--ghost" onClick={() => setAdding(false)}>Cancel</button>
           </div>
         </div>

@@ -89,6 +89,13 @@
   font-style: italic;
 }
 
+.contact__error {
+  font-family: var(--font-accent);
+  font-size: 0.9rem;
+  color: #c0392b;
+  margin-bottom: 0.5rem;
+}
+
 /* Thank you */
 .contact__thanks {
   display: flex;
