@@ -54,6 +54,14 @@ export default function HowItWorks() {
           Neighbors helping neighbors — the old-fashioned way.
         </p>
       </div>
+
+      <div className="how__note how__note--request">
+        <span className="how__note-leaf">🌱</span>
+        <p>
+          <strong>Don't see what you're looking for?</strong> Send us a request anyway — we love
+          knowing what neighbors would find useful. If there's enough interest, we'll grow it.
+        </p>
+      </div>
     </section>
   )
 }

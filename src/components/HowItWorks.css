@@ -69,6 +69,11 @@
   max-width: 560px;
 }
 
+.how__note--request {
+  border-left-color: var(--moss);
+  margin-top: 0.75rem;
+}
+
 .how__note-leaf { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
 
 .how__note p {
