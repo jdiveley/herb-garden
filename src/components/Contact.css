@@ -89,6 +89,18 @@
   font-style: italic;
 }
 
+.contact__required {
+  color: #c0392b;
+  font-style: normal;
+}
+
+.contact__optional {
+  font-size: 0.8em;
+  color: var(--dust);
+  font-weight: 400;
+  font-style: italic;
+}
+
 .contact__error {
   font-family: var(--font-accent);
   font-size: 0.9rem;

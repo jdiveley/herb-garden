@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './Contact.css'
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', message: '' })
+  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' })
   const [status, setStatus] = useState('idle') // idle | sending | sent | error
 
   const handleChange = e =>
@@ -56,6 +56,31 @@ export default function Contact() {
               value={form.name}
               onChange={handleChange}
               required
+            />
+          </div>
+
+          <div className="contact__field">
+            <label htmlFor="email">Your email <span className="contact__required">*</span></label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="e.g. margaret@example.com"
+              value={form.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="contact__field">
+            <label htmlFor="phone">Phone number <span className="contact__optional">(optional)</span></label>
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              placeholder="e.g. 07700 900123"
+              value={form.phone}
+              onChange={handleChange}
             />
           </div>
 

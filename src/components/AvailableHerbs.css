@@ -187,6 +187,19 @@
   margin-bottom: 1rem;
 }
 
+.herb-card__photo {
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.herb-card__photo img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
 .herb-card__claim {
   display: inline-block;
   font-family: var(--font-accent);

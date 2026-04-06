@@ -31,7 +31,10 @@ const upload = multer({ storage, limits: { fileSize: 10 * 1024 * 1024 } })
 // ── Config ────────────────────────────────────────────────────────────────────
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'blackpaw2024'
 const JWT_SECRET     = process.env.JWT_SECRET     || 'change-this-secret-before-deploying'
-const PASSWORD_HASH  = bcrypt.hashSync(ADMIN_PASSWORD, 10)
+
+// Load stored hash from data.json if present, otherwise hash the env password
+const _initialData = JSON.parse(readFileSync(DATA_FILE, 'utf8'))
+let currentPasswordHash = _initialData.passwordHash || bcrypt.hashSync(ADMIN_PASSWORD, 10)
 
 // ── Mailer ────────────────────────────────────────────────────────────────────
 const transporter = nodemailer.createTransport({
@@ -67,7 +70,7 @@ app.get('/api/data', (req, res) => {
 // Login
 app.post('/api/login', (req, res) => {
   const { password } = req.body
-  if (!password || !bcrypt.compareSync(password, PASSWORD_HASH)) {
+  if (!password || !bcrypt.compareSync(password, currentPasswordHash)) {
     return res.status(401).json({ error: 'Incorrect password' })
   }
   const token = jwt.sign({ admin: true }, JWT_SECRET, { expiresIn: '7d' })
@@ -76,20 +79,22 @@ app.post('/api/login', (req, res) => {
 
 // Send contact email
 app.post('/api/contact', async (req, res) => {
-  const { name, message } = req.body
-  if (!name || !message) return res.status(400).json({ error: 'Name and message are required' })
+  const { name, email, phone, message } = req.body
+  if (!name || !email || !message) return res.status(400).json({ error: 'Name, email, and message are required' })
 
   try {
     await transporter.sendMail({
       from: `"Blackpaw Cottage Website" <${process.env.GMAIL_USER}>`,
       to: 'tami.titheridge@gmail.com',
       cc: process.env.CONTACT_EMAIL || process.env.GMAIL_USER,
-      replyTo: process.env.GMAIL_USER,
+      replyTo: email,
       subject: `🐾 Garden request from ${name}`,
       html: `
         <div style="font-family: Georgia, serif; max-width: 500px; color: #2a2018;">
           <h2 style="color: #3d5a36;">New garden request from your website</h2>
           <p><strong>From:</strong> ${name}</p>
+          <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+          ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
           <hr style="border: none; border-top: 1px solid #e0d8c8; margin: 1rem 0;" />
           <p style="line-height: 1.7;">${message.replace(/\n/g, '<br>')}</p>
           <hr style="border: none; border-top: 1px solid #e0d8c8; margin: 1rem 0;" />
@@ -105,6 +110,25 @@ app.post('/api/contact', async (req, res) => {
 })
 
 // ── Protected routes ──────────────────────────────────────────────────────────
+
+// Change admin password
+app.post('/api/change-password', authenticate, (req, res) => {
+  const { currentPassword, newPassword } = req.body
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ error: 'Current and new password are required' })
+  }
+  if (!bcrypt.compareSync(currentPassword, currentPasswordHash)) {
+    return res.status(401).json({ error: 'Current password is incorrect' })
+  }
+  if (newPassword.length < 8) {
+    return res.status(400).json({ error: 'New password must be at least 8 characters' })
+  }
+  currentPasswordHash = bcrypt.hashSync(newPassword, 10)
+  const data = readData()
+  data.passwordHash = currentPasswordHash
+  writeData(data)
+  res.json({ ok: true })
+})
 
 // Update hero text
 app.put('/api/hero', authenticate, (req, res) => {
@@ -218,6 +242,58 @@ app.delete('/api/orchard/:id', authenticate, (req, res) => {
   const data = readData()
   data.orchard = data.orchard.filter(h => h.id !== Number(req.params.id))
   writeData(data)
+  res.json({ ok: true })
+})
+
+// Upload photo for a specific herb
+app.post('/api/herbs/:id/photo', authenticate, upload.single('photo'), (req, res) => {
+  const data = readData()
+  const idx = data.herbs.findIndex(h => h.id === Number(req.params.id))
+  if (idx === -1) return res.status(404).json({ error: 'Herb not found' })
+  if (data.herbs[idx].photo) {
+    try { unlinkSync(join(UPLOADS_DIR, data.herbs[idx].photo)) } catch {}
+  }
+  data.herbs[idx].photo = req.file.filename
+  writeData(data)
+  res.json({ photo: req.file.filename })
+})
+
+// Delete photo for a specific herb
+app.delete('/api/herbs/:id/photo', authenticate, (req, res) => {
+  const data = readData()
+  const idx = data.herbs.findIndex(h => h.id === Number(req.params.id))
+  if (idx === -1) return res.status(404).json({ error: 'Herb not found' })
+  if (data.herbs[idx].photo) {
+    try { unlinkSync(join(UPLOADS_DIR, data.herbs[idx].photo)) } catch {}
+    delete data.herbs[idx].photo
+    writeData(data)
+  }
+  res.json({ ok: true })
+})
+
+// Upload photo for a specific orchard item
+app.post('/api/orchard/:id/photo', authenticate, upload.single('photo'), (req, res) => {
+  const data = readData()
+  const idx = data.orchard.findIndex(h => h.id === Number(req.params.id))
+  if (idx === -1) return res.status(404).json({ error: 'Item not found' })
+  if (data.orchard[idx].photo) {
+    try { unlinkSync(join(UPLOADS_DIR, data.orchard[idx].photo)) } catch {}
+  }
+  data.orchard[idx].photo = req.file.filename
+  writeData(data)
+  res.json({ photo: req.file.filename })
+})
+
+// Delete photo for a specific orchard item
+app.delete('/api/orchard/:id/photo', authenticate, (req, res) => {
+  const data = readData()
+  const idx = data.orchard.findIndex(h => h.id === Number(req.params.id))
+  if (idx === -1) return res.status(404).json({ error: 'Item not found' })
+  if (data.orchard[idx].photo) {
+    try { unlinkSync(join(UPLOADS_DIR, data.orchard[idx].photo)) } catch {}
+    delete data.orchard[idx].photo
+    writeData(data)
+  }
   res.json({ ok: true })
 })
 

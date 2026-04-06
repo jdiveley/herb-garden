@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 
 const STATUSES = ['available', 'limited', 'coming-soon', 'gone']
 const STATUS_COLORS = {
@@ -13,12 +13,14 @@ const EMPTY_HERB = {
   quantity: '', description: '', tip: '', season: ''
 }
 
-export default function HerbsEditor({ herbs, onAdd, onUpdate, onDelete, label = 'Herb' }) {
+export default function HerbsEditor({ herbs, onAdd, onUpdate, onDelete, onUploadPhoto, onDeletePhoto, label = 'Herb' }) {
   const [editing, setEditing] = useState(null)   // herb id being edited
   const [editForm, setEditForm] = useState({})
   const [adding, setAdding] = useState(false)
   const [newForm, setNewForm] = useState(EMPTY_HERB)
   const [confirmDelete, setConfirmDelete] = useState(null)
+  const [uploadingPhoto, setUploadingPhoto] = useState(false)
+  const photoInputRef = useRef()
 
   const startEdit = (herb) => {
     setEditing(herb.id)
@@ -43,6 +45,18 @@ export default function HerbsEditor({ herbs, onAdd, onUpdate, onDelete, label = 
     await onAdd(newForm)
     setNewForm(EMPTY_HERB)
     setAdding(false)
+  }
+
+  const handlePhotoUpload = async (herbId, file) => {
+    setUploadingPhoto(true)
+    const result = await onUploadPhoto(herbId, file)
+    if (result?.photo) setEditForm(f => ({ ...f, photo: result.photo }))
+    setUploadingPhoto(false)
+  }
+
+  const handlePhotoDelete = async (herbId) => {
+    await onDeletePhoto(herbId)
+    setEditForm(f => ({ ...f, photo: undefined }))
   }
 
   return (
@@ -75,6 +89,33 @@ export default function HerbsEditor({ herbs, onAdd, onUpdate, onDelete, label = 
           <div key={herb.id} className="herb-row">
             {editing === herb.id ? (
               <div className="herb-form">
+                <div className="herb-form__photo-section">
+                  <label className="herb-form__photo-label">Item Photo <span>(optional)</span></label>
+                  {editForm.photo ? (
+                    <div className="herb-form__photo-row">
+                      <img src={`/uploads/${editForm.photo}`} alt="" className="herb-form__photo-thumb" />
+                      <button
+                        className="admin-btn admin-btn--ghost admin-btn--sm"
+                        onClick={() => handlePhotoDelete(herb.id)}
+                      >Remove photo</button>
+                    </div>
+                  ) : (
+                    <>
+                      <input
+                        ref={photoInputRef}
+                        type="file"
+                        accept="image/*"
+                        hidden
+                        onChange={e => { if (e.target.files[0]) handlePhotoUpload(herb.id, e.target.files[0]); e.target.value = '' }}
+                      />
+                      <button
+                        className="admin-btn admin-btn--ghost admin-btn--sm"
+                        onClick={() => photoInputRef.current.click()}
+                        disabled={uploadingPhoto}
+                      >{uploadingPhoto ? 'Uploading…' : '+ Add photo'}</button>
+                    </>
+                  )}
+                </div>
                 <HerbFormFields form={editForm} onChange={setEditForm} />
                 <div className="herb-form__actions">
                   <button className="admin-btn admin-btn--primary" onClick={saveEdit}>Save Changes</button>

@@ -7,12 +7,91 @@ import PhotosEditor from './PhotosEditor.jsx'
 import './Admin.css'
 
 const TABS = [
-  { id: 'herbs',   label: '🌿 Herbs' },
-  { id: 'orchard', label: '🍋 Orchard' },
-  { id: 'hero',    label: '🏠 Homepage Text' },
-  { id: 'about',   label: '📖 About Section' },
-  { id: 'photos',  label: '📷 Garden Photos' },
+  { id: 'herbs',    label: '🌿 Herbs' },
+  { id: 'orchard',  label: '🍋 Orchard' },
+  { id: 'hero',     label: '🏠 Homepage Text' },
+  { id: 'about',    label: '📖 About Section' },
+  { id: 'photos',   label: '📷 Garden Photos' },
+  { id: 'security', label: '🔒 Security' },
 ]
+
+function ChangePasswordForm({ authHeaders, showToast }) {
+  const [form, setForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' })
+  const [error, setError] = useState('')
+  const [saving, setSaving] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError('')
+    if (form.newPassword !== form.confirmPassword) {
+      setError('New passwords do not match')
+      return
+    }
+    setSaving(true)
+    try {
+      const res = await fetch('/api/change-password', {
+        method: 'POST',
+        headers: authHeaders,
+        body: JSON.stringify({ currentPassword: form.currentPassword, newPassword: form.newPassword }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setError(data.error || 'Failed to change password'); return }
+      setForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
+      showToast('Password changed successfully!')
+    } catch { setError('Failed to change password. Please try again.') }
+    finally { setSaving(false) }
+  }
+
+  return (
+    <div className="admin-editor">
+      <div className="admin-section-header">
+        <div>
+          <h2>Change Password</h2>
+          <p>Update the admin login password</p>
+        </div>
+      </div>
+      <div className="admin-card" style={{ maxWidth: 420 }}>
+        <form onSubmit={handleSubmit}>
+          {error && <div className="admin-error">{error}</div>}
+          <div className="admin-field">
+            <label>Current Password</label>
+            <input
+              type="password"
+              value={form.currentPassword}
+              onChange={e => setForm(f => ({ ...f, currentPassword: e.target.value }))}
+              required
+              autoComplete="current-password"
+            />
+          </div>
+          <div className="admin-field">
+            <label>New Password <span>(min 8 characters)</span></label>
+            <input
+              type="password"
+              value={form.newPassword}
+              onChange={e => setForm(f => ({ ...f, newPassword: e.target.value }))}
+              required
+              minLength={8}
+              autoComplete="new-password"
+            />
+          </div>
+          <div className="admin-field">
+            <label>Confirm New Password</label>
+            <input
+              type="password"
+              value={form.confirmPassword}
+              onChange={e => setForm(f => ({ ...f, confirmPassword: e.target.value }))}
+              required
+              autoComplete="new-password"
+            />
+          </div>
+          <button type="submit" className="admin-btn admin-btn--primary" disabled={saving}>
+            {saving ? 'Saving…' : 'Update Password'}
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
 
 export default function AdminDashboard() {
   const [tab, setTab] = useState('herbs')
@@ -96,6 +175,43 @@ export default function AdminDashboard() {
     } catch { showToast('Error deleting photo.') }
   }
 
+  const uploadItemPhoto = async (id, file, type) => {
+    const formData = new FormData()
+    formData.append('photo', file)
+    try {
+      const res = await fetch(`/api/${type}/${id}/photo`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: formData,
+      })
+      const { photo } = await res.json()
+      if (type === 'herbs') {
+        setSiteData(d => ({ ...d, herbs: d.herbs.map(h => h.id === id ? { ...h, photo } : h) }))
+      } else {
+        setSiteData(d => ({ ...d, orchard: (d.orchard || []).map(h => h.id === id ? { ...h, photo } : h) }))
+      }
+      showToast('Photo uploaded!')
+      return { photo }
+    } catch {
+      showToast('Photo upload failed.')
+      return null
+    }
+  }
+
+  const deleteItemPhoto = async (id, type) => {
+    try {
+      await fetch(`/api/${type}/${id}/photo`, { method: 'DELETE', headers: authHeaders })
+      if (type === 'herbs') {
+        setSiteData(d => ({ ...d, herbs: d.herbs.map(h => h.id === id ? { ...h, photo: undefined } : h) }))
+      } else {
+        setSiteData(d => ({ ...d, orchard: (d.orchard || []).map(h => h.id === id ? { ...h, photo: undefined } : h) }))
+      }
+      showToast('Photo removed.')
+    } catch {
+      showToast('Failed to remove photo.')
+    }
+  }
+
   const addOrchardItem = async (item) => {
     const res = await fetch('/api/orchard', { method: 'POST', headers: authHeaders, body: JSON.stringify(item) })
     const newItem = await res.json()
@@ -177,10 +293,16 @@ export default function AdminDashboard() {
 
       <main className="admin-content">
         {tab === 'herbs' && (
-          <HerbsEditor herbs={siteData.herbs} onAdd={addHerb} onUpdate={updateHerb} onDelete={deleteHerb} saving={saving} />
+          <HerbsEditor herbs={siteData.herbs} onAdd={addHerb} onUpdate={updateHerb} onDelete={deleteHerb}
+            onUploadPhoto={(id, file) => uploadItemPhoto(id, file, 'herbs')}
+            onDeletePhoto={(id) => deleteItemPhoto(id, 'herbs')}
+            saving={saving} />
         )}
         {tab === 'orchard' && (
-          <HerbsEditor herbs={siteData.orchard || []} onAdd={addOrchardItem} onUpdate={updateOrchardItem} onDelete={deleteOrchardItem} saving={saving} label="Orchard Item" />
+          <HerbsEditor herbs={siteData.orchard || []} onAdd={addOrchardItem} onUpdate={updateOrchardItem} onDelete={deleteOrchardItem}
+            onUploadPhoto={(id, file) => uploadItemPhoto(id, file, 'orchard')}
+            onDeletePhoto={(id) => deleteItemPhoto(id, 'orchard')}
+            saving={saving} label="Orchard Item" />
         )}
         {tab === 'hero' && (
           <HeroEditor data={siteData.hero} onSave={saveHero} saving={saving} />
@@ -196,6 +318,9 @@ export default function AdminDashboard() {
             onDelete={deletePhoto}
             saving={saving}
           />
+        )}
+        {tab === 'security' && (
+          <ChangePasswordForm authHeaders={authHeaders} showToast={showToast} />
         )}
       </main>
 

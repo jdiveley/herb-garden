@@ -79,6 +79,11 @@ export default function AvailableHerbs({ herbs = [], orchard = [] }) {
             </div>
             {expanded === item.id && (
               <div className="herb-card__details">
+                {item.photo && (
+                  <div className="herb-card__photo">
+                    <img src={`/uploads/${item.photo}`} alt={item.name} />
+                  </div>
+                )}
                 <p className="herb-card__desc">{item.description}</p>
                 <p className="herb-card__tip"><strong>Tip:</strong> {item.tip}</p>
                 {(item.status === 'available' || item.status === 'limited') && (
