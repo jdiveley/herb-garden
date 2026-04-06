@@ -226,23 +226,31 @@ export default function AdminDashboard() {
   }
 
   const addPantryItem = async (item) => {
-    const res = await fetch('/api/pantry', { method: 'POST', headers: authHeaders, body: JSON.stringify(item) })
-    const newItem = await res.json()
-    setSiteData(d => ({ ...d, pantry: [...(d.pantry || []), newItem] }))
-    showToast(`${newItem.name} added!`)
+    try {
+      const res = await fetch('/api/pantry', { method: 'POST', headers: authHeaders, body: JSON.stringify(item) })
+      if (!res.ok) throw new Error()
+      const newItem = await res.json()
+      setSiteData(d => ({ ...d, pantry: [...(d.pantry || []), newItem] }))
+      showToast(`${newItem.name} added!`)
+    } catch { showToast('Error adding item. Try restarting the server.') }
   }
 
   const updatePantryItem = async (id, updates) => {
-    const res = await fetch(`/api/pantry/${id}`, { method: 'PUT', headers: authHeaders, body: JSON.stringify(updates) })
-    const updated = await res.json()
-    setSiteData(d => ({ ...d, pantry: (d.pantry || []).map(h => h.id === id ? updated : h) }))
-    showToast('Item updated!')
+    try {
+      const res = await fetch(`/api/pantry/${id}`, { method: 'PUT', headers: authHeaders, body: JSON.stringify(updates) })
+      if (!res.ok) throw new Error()
+      const updated = await res.json()
+      setSiteData(d => ({ ...d, pantry: (d.pantry || []).map(h => h.id === id ? updated : h) }))
+      showToast('Item updated!')
+    } catch { showToast('Error updating item.') }
   }
 
   const deletePantryItem = async (id) => {
-    await fetch(`/api/pantry/${id}`, { method: 'DELETE', headers: authHeaders })
-    setSiteData(d => ({ ...d, pantry: (d.pantry || []).filter(h => h.id !== id) }))
-    showToast('Item removed.')
+    try {
+      await fetch(`/api/pantry/${id}`, { method: 'DELETE', headers: authHeaders })
+      setSiteData(d => ({ ...d, pantry: (d.pantry || []).filter(h => h.id !== id) }))
+      showToast('Item removed.')
+    } catch { showToast('Error removing item.') }
   }
 
   const addHerb = async (herb) => {
