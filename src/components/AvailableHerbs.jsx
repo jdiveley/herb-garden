@@ -8,12 +8,13 @@ const STATUS_LABELS = {
   gone:          { label: 'Gone for now', color: 'var(--dust)' },
 }
 
-export default function AvailableHerbs({ herbs = [], orchard = [] }) {
+export default function AvailableHerbs({ herbs = [], orchard = [], pantry = [] }) {
   const [view, setView] = useState('herbs')
   const [filter, setFilter] = useState('all')
   const [expanded, setExpanded] = useState(null)
 
-  const items = view === 'herbs' ? herbs : orchard
+  const itemMap = { herbs, orchard, pantry }
+  const items = itemMap[view] || []
   const filters = ['all', 'available', 'limited', 'coming-soon']
   const visible = items.filter(h => filter === 'all' ? true : h.status === filter)
 
@@ -43,6 +44,10 @@ export default function AvailableHerbs({ herbs = [], orchard = [] }) {
           className={`herbs__toggle-btn ${view === 'orchard' ? 'active' : ''}`}
           onClick={() => switchView('orchard')}
         >Orchard</button>
+        <button
+          className={`herbs__toggle-btn ${view === 'pantry' ? 'active' : ''}`}
+          onClick={() => switchView('pantry')}
+        >Pantry</button>
       </div>
 
       <div className="herbs__filters">
@@ -53,7 +58,7 @@ export default function AvailableHerbs({ herbs = [], orchard = [] }) {
             onClick={() => setFilter(f)}
           >
             {f === 'all'
-              ? (view === 'herbs' ? 'All herbs' : 'All fruit')
+              ? (view === 'herbs' ? 'All herbs' : view === 'orchard' ? 'All fruit' : 'All items')
               : STATUS_LABELS[f]?.label}
           </button>
         ))}

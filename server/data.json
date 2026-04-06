@@ -44,6 +44,7 @@
       "season": "Coming soon"
     }
   ],
+  "pantry": [],
   "photos": [
     {
       "id": 1774091917621,
@@ -135,6 +136,16 @@
       "description": "Fresh, fragrant, and endlessly generous — mint is the herb that practically begs to be shared. Snip a sprig for your tea, your cooking, or a little bundle for a neighbour.",
       "tip": "A little goes a long way — use sparingly.",
       "season": "In season"
+    },
+    {
+      "name": "Rosemary Salt",
+      "emoji": "🌿",
+      "status": "available",
+      "quantity": "1",
+      "description": "Handmade rosemary salt made with Malden Salt and a pinch of garlic powder & toasted, then ground peppercorns.",
+      "tip": "",
+      "season": "",
+      "id": 1775511174299
     }
   ]
 }

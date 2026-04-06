@@ -9,6 +9,7 @@ import './Admin.css'
 const TABS = [
   { id: 'herbs',    label: '🌿 Herbs' },
   { id: 'orchard',  label: '🍋 Orchard' },
+  { id: 'pantry',   label: '🫙 Pantry' },
   { id: 'hero',     label: '🏠 Homepage Text' },
   { id: 'about',    label: '📖 About Section' },
   { id: 'photos',   label: '📷 Garden Photos' },
@@ -185,11 +186,7 @@ export default function AdminDashboard() {
         body: formData,
       })
       const { photo } = await res.json()
-      if (type === 'herbs') {
-        setSiteData(d => ({ ...d, herbs: d.herbs.map(h => h.id === id ? { ...h, photo } : h) }))
-      } else {
-        setSiteData(d => ({ ...d, orchard: (d.orchard || []).map(h => h.id === id ? { ...h, photo } : h) }))
-      }
+      setSiteData(d => ({ ...d, [type]: (d[type] || []).map(h => h.id === id ? { ...h, photo } : h) }))
       showToast('Photo uploaded!')
       return { photo }
     } catch {
@@ -201,11 +198,7 @@ export default function AdminDashboard() {
   const deleteItemPhoto = async (id, type) => {
     try {
       await fetch(`/api/${type}/${id}/photo`, { method: 'DELETE', headers: authHeaders })
-      if (type === 'herbs') {
-        setSiteData(d => ({ ...d, herbs: d.herbs.map(h => h.id === id ? { ...h, photo: undefined } : h) }))
-      } else {
-        setSiteData(d => ({ ...d, orchard: (d.orchard || []).map(h => h.id === id ? { ...h, photo: undefined } : h) }))
-      }
+      setSiteData(d => ({ ...d, [type]: (d[type] || []).map(h => h.id === id ? { ...h, photo: undefined } : h) }))
       showToast('Photo removed.')
     } catch {
       showToast('Failed to remove photo.')
@@ -229,6 +222,26 @@ export default function AdminDashboard() {
   const deleteOrchardItem = async (id) => {
     await fetch(`/api/orchard/${id}`, { method: 'DELETE', headers: authHeaders })
     setSiteData(d => ({ ...d, orchard: (d.orchard || []).filter(h => h.id !== id) }))
+    showToast('Item removed.')
+  }
+
+  const addPantryItem = async (item) => {
+    const res = await fetch('/api/pantry', { method: 'POST', headers: authHeaders, body: JSON.stringify(item) })
+    const newItem = await res.json()
+    setSiteData(d => ({ ...d, pantry: [...(d.pantry || []), newItem] }))
+    showToast(`${newItem.name} added!`)
+  }
+
+  const updatePantryItem = async (id, updates) => {
+    const res = await fetch(`/api/pantry/${id}`, { method: 'PUT', headers: authHeaders, body: JSON.stringify(updates) })
+    const updated = await res.json()
+    setSiteData(d => ({ ...d, pantry: (d.pantry || []).map(h => h.id === id ? updated : h) }))
+    showToast('Item updated!')
+  }
+
+  const deletePantryItem = async (id) => {
+    await fetch(`/api/pantry/${id}`, { method: 'DELETE', headers: authHeaders })
+    setSiteData(d => ({ ...d, pantry: (d.pantry || []).filter(h => h.id !== id) }))
     showToast('Item removed.')
   }
 
@@ -303,6 +316,12 @@ export default function AdminDashboard() {
             onUploadPhoto={(id, file) => uploadItemPhoto(id, file, 'orchard')}
             onDeletePhoto={(id) => deleteItemPhoto(id, 'orchard')}
             saving={saving} label="Orchard Item" />
+        )}
+        {tab === 'pantry' && (
+          <HerbsEditor herbs={siteData.pantry || []} onAdd={addPantryItem} onUpdate={updatePantryItem} onDelete={deletePantryItem}
+            onUploadPhoto={(id, file) => uploadItemPhoto(id, file, 'pantry')}
+            onDeletePhoto={(id) => deleteItemPhoto(id, 'pantry')}
+            saving={saving} label="Pantry Item" />
         )}
         {tab === 'hero' && (
           <HeroEditor data={siteData.hero} onSave={saveHero} saving={saving} />

@@ -245,6 +245,38 @@ app.delete('/api/orchard/:id', authenticate, (req, res) => {
   res.json({ ok: true })
 })
 
+// Get all pantry items
+app.get('/api/pantry', authenticate, (req, res) => {
+  res.json(readData().pantry)
+})
+
+// Add pantry item
+app.post('/api/pantry', authenticate, (req, res) => {
+  const data = readData()
+  const newItem = { ...req.body, id: Date.now() }
+  data.pantry.push(newItem)
+  writeData(data)
+  res.json(newItem)
+})
+
+// Update pantry item
+app.put('/api/pantry/:id', authenticate, (req, res) => {
+  const data = readData()
+  const idx = data.pantry.findIndex(h => h.id === Number(req.params.id))
+  if (idx === -1) return res.status(404).json({ error: 'Item not found' })
+  data.pantry[idx] = { ...data.pantry[idx], ...req.body }
+  writeData(data)
+  res.json(data.pantry[idx])
+})
+
+// Delete pantry item
+app.delete('/api/pantry/:id', authenticate, (req, res) => {
+  const data = readData()
+  data.pantry = data.pantry.filter(h => h.id !== Number(req.params.id))
+  writeData(data)
+  res.json({ ok: true })
+})
+
 // Upload photo for a specific herb
 app.post('/api/herbs/:id/photo', authenticate, upload.single('photo'), (req, res) => {
   const data = readData()
@@ -292,6 +324,32 @@ app.delete('/api/orchard/:id/photo', authenticate, (req, res) => {
   if (data.orchard[idx].photo) {
     try { unlinkSync(join(UPLOADS_DIR, data.orchard[idx].photo)) } catch {}
     delete data.orchard[idx].photo
+    writeData(data)
+  }
+  res.json({ ok: true })
+})
+
+// Upload photo for a specific pantry item
+app.post('/api/pantry/:id/photo', authenticate, upload.single('photo'), (req, res) => {
+  const data = readData()
+  const idx = data.pantry.findIndex(h => h.id === Number(req.params.id))
+  if (idx === -1) return res.status(404).json({ error: 'Item not found' })
+  if (data.pantry[idx].photo) {
+    try { unlinkSync(join(UPLOADS_DIR, data.pantry[idx].photo)) } catch {}
+  }
+  data.pantry[idx].photo = req.file.filename
+  writeData(data)
+  res.json({ photo: req.file.filename })
+})
+
+// Delete photo for a specific pantry item
+app.delete('/api/pantry/:id/photo', authenticate, (req, res) => {
+  const data = readData()
+  const idx = data.pantry.findIndex(h => h.id === Number(req.params.id))
+  if (idx === -1) return res.status(404).json({ error: 'Item not found' })
+  if (data.pantry[idx].photo) {
+    try { unlinkSync(join(UPLOADS_DIR, data.pantry[idx].photo)) } catch {}
+    delete data.pantry[idx].photo
     writeData(data)
   }
   res.json({ ok: true })
