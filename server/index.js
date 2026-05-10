@@ -112,8 +112,8 @@ app.post('/api/contact', async (req, res) => {
 // Place order — decrements stock across herbs/orchard/pantry and sends email
 app.post('/api/order', async (req, res) => {
   const { name, phone, email, items } = req.body
-  if (!name || !phone || !email || !Array.isArray(items) || items.length === 0) {
-    return res.status(400).json({ error: 'Name, phone, email and at least one item are required' })
+  if (!name || !email || !Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ error: 'Name, email and at least one item are required' })
   }
 
   const data = readData()

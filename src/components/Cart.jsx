@@ -108,12 +108,11 @@ export default function Cart({ cart, onUpdateQty, onRemove, onClose, onOrderPlac
                   />
                 </div>
                 <div className="cart-field">
-                  <label htmlFor="cart-phone">Phone</label>
+                  <label htmlFor="cart-phone">Phone <span style={{ fontWeight: 400, opacity: 0.6 }}>(optional)</span></label>
                   <input
                     id="cart-phone"
                     name="phone"
                     type="tel"
-                    required
                     value={form.phone}
                     onChange={handleChange}
                     placeholder="Best number to reach you"
