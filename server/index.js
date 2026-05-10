@@ -109,6 +109,63 @@ app.post('/api/contact', async (req, res) => {
   }
 })
 
+// Place order — decrements stock across herbs/orchard/pantry and sends email
+app.post('/api/order', async (req, res) => {
+  const { name, phone, email, items } = req.body
+  if (!name || !phone || !email || !Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ error: 'Name, phone, email and at least one item are required' })
+  }
+
+  const data = readData()
+
+  for (const item of items) {
+    for (const collection of ['herbs', 'orchard', 'pantry']) {
+      const entry = data[collection]?.find(h => h.id === item.id)
+      if (!entry || entry.stockQty === null || entry.stockQty === undefined) continue
+      entry.stockQty = Math.max(0, entry.stockQty - item.qty)
+      if (entry.stockQty === 0) {
+        entry.status = 'gone'
+      } else if (entry.stockQty <= 3 && entry.status === 'available') {
+        entry.status = 'limited'
+      }
+    }
+  }
+  writeData(data)
+
+  const itemRows = items
+    .map(i => `<tr><td style="padding:4px 16px 4px 0">${i.emoji} ${i.name}</td><td style="padding:4px 0">× ${i.qty}</td></tr>`)
+    .join('')
+
+  try {
+    await transporter.sendMail({
+      from: `"Blackpaw Cottage Website" <${process.env.GMAIL_USER}>`,
+      to: 'tami.titheridge@gmail.com',
+      cc: process.env.CONTACT_EMAIL || process.env.GMAIL_USER,
+      replyTo: email,
+      subject: `🌿 New order from ${name}`,
+      html: `
+        <div style="font-family:Georgia,serif;max-width:520px;color:#2a2018">
+          <h2 style="color:#3d5a36">New order from your website</h2>
+          <table style="border-collapse:collapse;margin-bottom:1rem">
+            <tr><td style="padding:4px 16px 4px 0"><strong>Name</strong></td><td>${name}</td></tr>
+            <tr><td style="padding:4px 16px 4px 0"><strong>Phone</strong></td><td>${phone}</td></tr>
+            <tr><td style="padding:4px 16px 4px 0"><strong>Email</strong></td><td><a href="mailto:${email}">${email}</a></td></tr>
+          </table>
+          <hr style="border:none;border-top:1px solid #e0d8c8;margin:1rem 0"/>
+          <h3 style="color:#3d5a36;margin-bottom:0.5rem">Items requested</h3>
+          <table style="border-collapse:collapse;line-height:1.9">${itemRows}</table>
+          <hr style="border:none;border-top:1px solid #e0d8c8;margin:1rem 0"/>
+          <p style="font-size:0.85rem;color:#a89880">Sent from blackpawcottage.com</p>
+        </div>
+      `,
+    })
+    res.json({ ok: true })
+  } catch (err) {
+    console.error('Email error:', err)
+    res.status(500).json({ error: 'Failed to send email.' })
+  }
+})
+
 // ── Protected routes ──────────────────────────────────────────────────────────
 
 // Change admin password

@@ -10,7 +10,7 @@ const STATUS_COLORS = {
 
 const EMPTY_HERB = {
   name: '', emoji: '🌿', status: 'available',
-  quantity: '', description: '', tip: '', season: ''
+  quantity: '', stockQty: null, description: '', tip: '', season: ''
 }
 
 export default function HerbsEditor({ herbs, onAdd, onUpdate, onDelete, onUploadPhoto, onDeletePhoto, label = 'Herb' }) {
@@ -127,7 +127,11 @@ export default function HerbsEditor({ herbs, onAdd, onUpdate, onDelete, onUpload
                 <span className="herb-row__emoji">{herb.emoji}</span>
                 <div className="herb-row__info">
                   <strong>{herb.name}</strong>
-                  <span>{herb.quantity}</span>
+                  <span>
+                    {herb.stockQty !== null && herb.stockQty !== undefined
+                      ? `${herb.stockQty} in stock`
+                      : herb.quantity || '∞'}
+                  </span>
                 </div>
                 <span
                   className="herb-row__status"
@@ -195,13 +199,36 @@ function HerbFormFields({ form, onChange }) {
       </div>
       <div className="herb-form__row">
         <div className="admin-field" style={{ flex: 1 }}>
-          <label>Quantity note</label>
+          <label>Display label <span style={{ fontWeight: 400, color: 'var(--dust)' }}>(shown when unlimited)</span></label>
           <input value={form.quantity} onChange={set('quantity')} placeholder="e.g. Plenty, A few bundles" />
         </div>
         <div className="admin-field" style={{ flex: 1 }}>
           <label>Season note</label>
           <input value={form.season} onChange={set('season')} placeholder="e.g. Peak season" />
         </div>
+      </div>
+      <div className="herb-form__row" style={{ alignItems: 'flex-end', gap: '1rem' }}>
+        <div className="admin-field">
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+            <input
+              type="checkbox"
+              checked={form.stockQty === null || form.stockQty === undefined}
+              onChange={e => onChange(f => ({ ...f, stockQty: e.target.checked ? null : 0 }))}
+            />
+            Unlimited / no tracking
+          </label>
+        </div>
+        {form.stockQty !== null && form.stockQty !== undefined && (
+          <div className="admin-field" style={{ flex: 1 }}>
+            <label>Quantity available</label>
+            <input
+              type="number"
+              min="0"
+              value={form.stockQty}
+              onChange={e => onChange(f => ({ ...f, stockQty: Math.max(0, parseInt(e.target.value) || 0) }))}
+            />
+          </div>
+        )}
       </div>
       <div className="admin-field">
         <label>Description</label>

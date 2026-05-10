@@ -8,11 +8,12 @@ const STATUS_LABELS = {
   gone:          { label: 'Gone for now', color: 'var(--dust)' },
 }
 
-export default function AvailableHerbs({ herbs = [], orchard = [], pantry = [] }) {
+export default function AvailableHerbs({ herbs = [], orchard = [], pantry = [], cart = [], onAddToCart }) {
   const [view, setView] = useState('herbs')
   const [filter, setFilter] = useState('all')
   const [expanded, setExpanded] = useState(null)
 
+  const cartIds = new Set(cart.map(i => i.id))
   const itemMap = { herbs, orchard, pantry }
   const items = itemMap[view] || []
   const filters = ['all', 'available', 'limited', 'coming-soon']
@@ -78,7 +79,9 @@ export default function AvailableHerbs({ herbs = [], orchard = [], pantry = [] }
                   {STATUS_LABELS[item.status]?.label}
                 </span>
                 <h3 className="herb-card__name">{item.name}</h3>
-                <p className="herb-card__qty">{item.quantity}</p>
+                <p className="herb-card__qty">
+                  {item.stockQty != null ? `${item.stockQty} left` : item.quantity}
+                </p>
               </div>
               <span className="herb-card__arrow">{expanded === item.id ? '−' : '+'}</span>
             </div>
@@ -92,7 +95,17 @@ export default function AvailableHerbs({ herbs = [], orchard = [], pantry = [] }
                 <p className="herb-card__desc">{item.description}</p>
                 <p className="herb-card__tip"><strong>Tip:</strong> {item.tip}</p>
                 {(item.status === 'available' || item.status === 'limited') && (
-                  <a href="#contact" className="herb-card__claim">Claim some →</a>
+                  <div className="herb-card__cart-row">
+                    {item.stockQty != null && (
+                      <span className="herb-card__stock">{item.stockQty} left</span>
+                    )}
+                    <button
+                      className={`herb-card__add ${cartIds.has(item.id) ? 'herb-card__add--in-cart' : ''}`}
+                      onClick={e => { e.stopPropagation(); onAddToCart(item) }}
+                    >
+                      {cartIds.has(item.id) ? 'In basket ✓' : 'Add to basket'}
+                    </button>
+                  </div>
                 )}
               </div>
             )}

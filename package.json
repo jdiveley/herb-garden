@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"vite\" \"node server/index.js\"",
+    "dev:test": "vite --port 5174",
     "build": "vite build",
     "preview": "vite preview",
     "server": "node server/index.js"

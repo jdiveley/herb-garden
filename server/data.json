@@ -19,6 +19,7 @@
       "emoji": "🍋",
       "status": "coming-soon",
       "quantity": "Small Batch",
+      "stockQty": null,
       "description": "Bright, juicy lemons from a mature tree. Great for cooking, drinks, and everything in between.",
       "tip": "Pick when fully yellow for maximum juice.",
       "season": "Year-round"
@@ -29,6 +30,7 @@
       "emoji": "🍈",
       "status": "coming-soon",
       "quantity": "Small Batch",
+      "stockQty": null,
       "description": "Small, fragrant limes perfect for Thai cooking, cocktails, or squeezing over just about anything.",
       "tip": "Pick when slightly soft to the touch for the best juice yield.",
       "season": "Year-round"
@@ -39,12 +41,26 @@
       "emoji": "🍊",
       "status": "coming-soon",
       "quantity": "Small Batch",
+      "stockQty": null,
       "description": "Yes, they're green — yes, they're ripe! In Queensland's warm climate, homegrown oranges often stay green even when they're perfectly sweet and ready to eat. Don't judge a citrus by its colour. 🍊",
       "tip": "",
       "season": "Coming soon"
     }
   ],
-  "pantry": [],
+  "pantry": [
+    {
+      "name": "Rosemary Salt",
+      "emoji": "🌿",
+      "status": "coming-soon",
+      "quantity": "0",
+      "stockQty": null,
+      "description": "Handmade rosemary salt made with Malden Salt and a pinch of garlic powder & toasted peppercorns.",
+      "tip": "",
+      "season": "",
+      "id": 1775513151901,
+      "photo": "1775513158261.jpeg"
+    }
+  ],
   "photos": [
     {
       "id": 1774091917621,
@@ -81,8 +97,9 @@
       "id": 1,
       "name": "Basil",
       "emoji": "🌿",
-      "status": "gone",
+      "status": "available",
       "quantity": "Re-planting",
+      "stockQty": null,
       "description": "Large, fragrant leaves perfect for caprese, pesto, or tossing fresh into pasta. The Italian classic.",
       "tip": "Pick from the top to encourage bushy growth.",
       "season": "In Season"
@@ -93,6 +110,7 @@
       "emoji": "🌲",
       "status": "available",
       "quantity": "Plenty",
+      "stockQty": null,
       "description": "Woody stems full of piney aroma. Great for roasted meats, bread, or in a vase on the windowsill.",
       "tip": "Cut 4-6 inch sprigs, just above a leaf node.",
       "season": "Year-round"
@@ -103,6 +121,7 @@
       "emoji": "🌱",
       "status": "limited",
       "quantity": "Last few bunches",
+      "stockQty": null,
       "description": "Bright, grassy flavor — far better fresh than dried. Goes with almost everything savory.",
       "tip": "Cut outer stems at the base to keep it producing.",
       "season": "Wrapping up"
@@ -113,6 +132,7 @@
       "emoji": "🌼",
       "status": "coming-soon",
       "quantity": "Still Growing",
+      "stockQty": null,
       "description": "Tiny leaves with a citrusy twist on classic thyme. Wonderful with fish, poultry, or desserts.",
       "tip": "The flavor is most intense before it flowers.",
       "season": "In Season"
@@ -123,6 +143,7 @@
       "emoji": "🍀",
       "status": "available",
       "quantity": "Plenty",
+      "stockQty": null,
       "description": "The backbone of Italian and Greek cooking. We harvested heavily this year — resting the plant.",
       "tip": "Check back in late summer.",
       "season": "In Season"
@@ -133,6 +154,7 @@
       "emoji": "🌿",
       "status": "limited",
       "quantity": "Small batch",
+      "stockQty": null,
       "description": "Fresh, fragrant, and endlessly generous — mint is the herb that practically begs to be shared. Snip a sprig for your tea, your cooking, or a little bundle for a neighbour.",
       "tip": "A little goes a long way — use sparingly.",
       "season": "In season"
@@ -140,8 +162,9 @@
     {
       "name": "Rosemary Salt",
       "emoji": "🌿",
-      "status": "available",
-      "quantity": "1",
+      "status": "coming-soon",
+      "quantity": "",
+      "stockQty": null,
       "description": "Handmade rosemary salt made with Malden Salt and a pinch of garlic powder & toasted, then ground peppercorns.",
       "tip": "",
       "season": "",

@@ -211,3 +211,31 @@
   transition: color 0.2s, border-color 0.2s;
 }
 .herb-card__claim:hover { color: var(--fern); border-color: var(--fern); }
+
+.herb-card__cart-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.herb-card__stock {
+  font-family: var(--font-accent);
+  font-size: 0.85rem;
+  color: var(--bark);
+}
+
+.herb-card__add {
+  font-family: var(--font-accent);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  background: var(--moss);
+  color: var(--cream);
+  border: none;
+  border-radius: 2px;
+  padding: 0.5rem 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+.herb-card__add:hover { background: var(--bark); transform: translateY(-1px); }
+.herb-card__add--in-cart { background: var(--sage); }
