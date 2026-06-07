@@ -1,4 +1,6 @@
 {
+  "storeClosed": false,
+  "storeClosedMessage": "We've run out of herbs for this harvest window — check back soon!",
   "hero": {
     "eyebrow": "Narangba, QLD · Est. 2025",
     "title": "Fresh herbs,",
@@ -97,9 +99,9 @@
       "id": 1,
       "name": "Basil",
       "emoji": "🌿",
-      "status": "available",
-      "quantity": "Re-planting",
-      "stockQty": null,
+      "status": "gone",
+      "quantity": "",
+      "stockQty": 0,
       "description": "Large, fragrant leaves perfect for caprese, pesto, or tossing fresh into pasta. The Italian classic.",
       "tip": "Pick from the top to encourage bushy growth.",
       "season": "In Season"
@@ -121,7 +123,7 @@
       "emoji": "🌱",
       "status": "limited",
       "quantity": "Last few bunches",
-      "stockQty": null,
+      "stockQty": 3,
       "description": "Bright, grassy flavor — far better fresh than dried. Goes with almost everything savory.",
       "tip": "Cut outer stems at the base to keep it producing.",
       "season": "Wrapping up"
@@ -152,9 +154,9 @@
       "id": 8,
       "name": "Mint",
       "emoji": "🌿",
-      "status": "limited",
+      "status": "gone",
       "quantity": "Small batch",
-      "stockQty": null,
+      "stockQty": 0,
       "description": "Fresh, fragrant, and endlessly generous — mint is the herb that practically begs to be shared. Snip a sprig for your tea, your cooking, or a little bundle for a neighbour.",
       "tip": "A little goes a long way — use sparingly.",
       "season": "In season"
@@ -164,11 +166,55 @@
       "emoji": "🌿",
       "status": "coming-soon",
       "quantity": "",
-      "stockQty": null,
+      "stockQty": 0,
       "description": "Handmade rosemary salt made with Malden Salt and a pinch of garlic powder & toasted, then ground peppercorns.",
       "tip": "",
       "season": "",
       "id": 1775511174299
+    },
+    {
+      "name": "Lemongrass",
+      "emoji": "🌿",
+      "status": "gone",
+      "quantity": "",
+      "stockQty": 0,
+      "description": "Fresh lemongrass including leaves that you can steep in tea or use to make a yummy sugar syrup. ",
+      "tip": "",
+      "season": "",
+      "id": 1780703624031
+    },
+    {
+      "name": "Red Chillis",
+      "emoji": "🌶️ ",
+      "status": "gone",
+      "quantity": "",
+      "stockQty": 0,
+      "description": "Freshly harvested red chillis",
+      "tip": "",
+      "season": "",
+      "id": 1780703769069
+    },
+    {
+      "name": "Bok Choy",
+      "emoji": "🌿",
+      "status": "gone",
+      "quantity": "",
+      "stockQty": 0,
+      "description": "Beautiful fresh Bok Choy bunch, perfect for a stir fry",
+      "tip": "",
+      "season": "",
+      "id": 1780703832084
+    },
+    {
+      "name": "Thyme",
+      "emoji": "🌿",
+      "status": "gone",
+      "quantity": "",
+      "stockQty": 0,
+      "description": "A small bunch of freshly harvested Thyme ",
+      "tip": "",
+      "season": "",
+      "id": 1780703881779
     }
   ]
 }

@@ -10,11 +10,69 @@ const TABS = [
   { id: 'herbs',    label: '🌿 Herbs' },
   { id: 'orchard',  label: '🍋 Orchard' },
   { id: 'pantry',   label: '🫙 Pantry' },
+  { id: 'store',    label: '🏪 Store' },
   { id: 'hero',     label: '🏠 Homepage Text' },
   { id: 'about',    label: '📖 About Section' },
   { id: 'photos',   label: '📷 Garden Photos' },
   { id: 'security', label: '🔒 Security' },
 ]
+
+function StoreEditor({ storeClosed, storeClosedMessage, onToggle, onSaveMessage, showToast }) {
+  const [message, setMessage] = useState(storeClosedMessage)
+  const [saving, setSaving] = useState(false)
+
+  const handleSave = async (e) => {
+    e.preventDefault()
+    setSaving(true)
+    await onSaveMessage(message)
+    setSaving(false)
+  }
+
+  return (
+    <div className="admin-editor">
+      <div className="admin-section-header">
+        <div>
+          <h2>Store Status</h2>
+          <p>Control whether neighbours can place orders</p>
+        </div>
+      </div>
+
+      <div className="admin-card" style={{ maxWidth: 520 }}>
+        <div className="admin-store-status-row">
+          <div>
+            <p className="admin-store-status-label">Orders are currently</p>
+            <p className="admin-store-status-value" style={{ color: storeClosed ? '#c0392b' : '#3d5a36' }}>
+              {storeClosed ? 'Closed' : 'Open'}
+            </p>
+          </div>
+          <button
+            onClick={onToggle}
+            className={`admin-btn admin-store-toggle ${storeClosed ? 'admin-store-toggle--closed' : 'admin-store-toggle--open'}`}
+          >
+            {storeClosed ? '🔴 Store Closed' : '🟢 Store Open'}
+          </button>
+        </div>
+
+        <hr style={{ border: 'none', borderTop: '1px solid #e0d8c8', margin: '1.5rem 0' }} />
+
+        <form onSubmit={handleSave}>
+          <div className="admin-field">
+            <label>Closed message <span>(shown to neighbours when orders are paused)</span></label>
+            <textarea
+              value={message}
+              onChange={e => setMessage(e.target.value)}
+              rows={3}
+              placeholder="e.g. We've run out of herbs for this harvest window — check back soon!"
+            />
+          </div>
+          <button type="submit" className="admin-btn admin-btn--primary" disabled={saving}>
+            {saving ? 'Saving…' : 'Save Message'}
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
 
 function ChangePasswordForm({ authHeaders, showToast }) {
   const [form, setForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' })
@@ -117,6 +175,33 @@ export default function AdminDashboard() {
   const showToast = (msg) => {
     setToast(msg)
     setTimeout(() => setToast(''), 3000)
+  }
+
+  const toggleStore = async () => {
+    const newClosed = !siteData.storeClosed
+    try {
+      const res = await fetch('/api/store-status', {
+        method: 'PUT',
+        headers: authHeaders,
+        body: JSON.stringify({ storeClosed: newClosed }),
+      })
+      if (!res.ok) throw new Error()
+      setSiteData(d => ({ ...d, storeClosed: newClosed }))
+      showToast(newClosed ? 'Store closed — orders paused.' : 'Store open — orders enabled!')
+    } catch { showToast('Failed to update store status.') }
+  }
+
+  const saveStoreMessage = async (storeClosedMessage) => {
+    try {
+      const res = await fetch('/api/store-status', {
+        method: 'PUT',
+        headers: authHeaders,
+        body: JSON.stringify({ storeClosedMessage }),
+      })
+      if (!res.ok) throw new Error()
+      setSiteData(d => ({ ...d, storeClosedMessage }))
+      showToast('Closed message saved!')
+    } catch { showToast('Failed to save message.') }
   }
 
   const saveHero = async (hero) => {
@@ -295,6 +380,12 @@ export default function AdminDashboard() {
           </div>
         </div>
         <div className="admin-header__right">
+          <button
+            onClick={toggleStore}
+            className={`admin-btn admin-store-toggle ${siteData.storeClosed ? 'admin-store-toggle--closed' : 'admin-store-toggle--open'}`}
+          >
+            {siteData.storeClosed ? '🔴 Store Closed' : '🟢 Store Open'}
+          </button>
           <a href="/" target="_blank" className="admin-btn admin-btn--ghost">View Site ↗</a>
           <button onClick={logout} className="admin-btn admin-btn--ghost">Sign Out</button>
         </div>
@@ -330,6 +421,15 @@ export default function AdminDashboard() {
             onUploadPhoto={(id, file) => uploadItemPhoto(id, file, 'pantry')}
             onDeletePhoto={(id) => deleteItemPhoto(id, 'pantry')}
             saving={saving} label="Pantry Item" />
+        )}
+        {tab === 'store' && (
+          <StoreEditor
+            storeClosed={siteData.storeClosed}
+            storeClosedMessage={siteData.storeClosedMessage}
+            onToggle={toggleStore}
+            onSaveMessage={saveStoreMessage}
+            showToast={showToast}
+          />
         )}
         {tab === 'hero' && (
           <HeroEditor data={siteData.hero} onSave={saveHero} saving={saving} />

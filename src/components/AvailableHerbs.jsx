@@ -8,7 +8,7 @@ const STATUS_LABELS = {
   gone:          { label: 'Gone for now', color: 'var(--dust)' },
 }
 
-export default function AvailableHerbs({ herbs = [], orchard = [], pantry = [], cart = [], onAddToCart }) {
+export default function AvailableHerbs({ herbs = [], orchard = [], pantry = [], cart = [], onAddToCart, storeClosed = false, storeClosedMessage = '' }) {
   const [view, setView] = useState('herbs')
   const [filter, setFilter] = useState('all')
   const [expanded, setExpanded] = useState(null)
@@ -35,6 +35,13 @@ export default function AvailableHerbs({ herbs = [], orchard = [], pantry = [], 
           picked fresh the day you come by.
         </p>
       </div>
+
+      {storeClosed && (
+        <div className="herbs__closed-banner">
+          <span className="herbs__closed-icon">🌿</span>
+          <p>{storeClosedMessage || 'Orders are closed for this harvest window — check back soon!'}</p>
+        </div>
+      )}
 
       <div className="herbs__toggle">
         <button
@@ -94,7 +101,7 @@ export default function AvailableHerbs({ herbs = [], orchard = [], pantry = [], 
                 )}
                 <p className="herb-card__desc">{item.description}</p>
                 <p className="herb-card__tip"><strong>Tip:</strong> {item.tip}</p>
-                {(item.status === 'available' || item.status === 'limited') && (
+                {(item.status === 'available' || item.status === 'limited') && !storeClosed && (
                   <div className="herb-card__cart-row">
                     {item.stockQty != null && (
                       <span className="herb-card__stock">{item.stockQty} left</span>

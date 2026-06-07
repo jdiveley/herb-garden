@@ -109,8 +109,21 @@ app.post('/api/contact', async (req, res) => {
   }
 })
 
+// Update store open/closed status
+app.put('/api/store-status', authenticate, (req, res) => {
+  const data = readData()
+  if (typeof req.body.storeClosed === 'boolean') data.storeClosed = req.body.storeClosed
+  if (typeof req.body.storeClosedMessage === 'string') data.storeClosedMessage = req.body.storeClosedMessage
+  writeData(data)
+  res.json({ storeClosed: data.storeClosed, storeClosedMessage: data.storeClosedMessage })
+})
+
 // Place order — decrements stock across herbs/orchard/pantry and sends email
 app.post('/api/order', async (req, res) => {
+  const { storeClosed, storeClosedMessage } = readData()
+  if (storeClosed) {
+    return res.status(503).json({ error: storeClosedMessage || 'Orders are closed for this harvest window.' })
+  }
   const { name, phone, email, items } = req.body
   if (!name || !email || !Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ error: 'Name, email and at least one item are required' })

@@ -27,6 +27,31 @@
   line-height: 1.7;
 }
 
+/* Closed banner */
+.herbs__closed-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #fdf6ec;
+  border: 1px solid #e8c97a;
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.herbs__closed-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.herbs__closed-banner p {
+  font-family: var(--font-accent);
+  font-size: 1rem;
+  color: #7a4f0d;
+  margin: 0;
+  line-height: 1.5;
+}
+
 /* Toggle */
 .herbs__toggle {
   display: flex;

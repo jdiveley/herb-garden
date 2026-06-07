@@ -71,6 +71,8 @@ export default function PublicSite() {
           pantry={siteData.pantry}
           cart={cart}
           onAddToCart={addToCart}
+          storeClosed={siteData.storeClosed}
+          storeClosedMessage={siteData.storeClosedMessage}
         />
         <HowItWorks />
         <AboutGarden data={siteData.about} photos={siteData.photos} />
