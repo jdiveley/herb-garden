@@ -8,8 +8,8 @@ export default defineConfig({
     port: 5173,
     allowedHosts: ['www.blackpawcottage.com', 'blackpawcottage.com', 'test.blackpawcottage.com'],
     proxy: {
-      '/api': { target: 'http://localhost:3002', changeOrigin: true },
-      '/uploads': { target: 'http://localhost:3002', changeOrigin: true },
+      '/api': { target: 'http://localhost:3001', changeOrigin: true },
+      '/uploads': { target: 'http://localhost:3001', changeOrigin: true },
     }
   },
 })

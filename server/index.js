@@ -426,6 +426,6 @@ app.delete('/api/pantry/:id/photo', authenticate, (req, res) => {
 })
 
 // ── Start ─────────────────────────────────────────────────────────────────────
-app.listen(3002, () => {
-  console.log('API server running on http://localhost:3002')
+app.listen(3001, () => {
+  console.log('API server running on http://localhost:3001')
 })
