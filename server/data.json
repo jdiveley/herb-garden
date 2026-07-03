@@ -1,6 +1,6 @@
 {
   "storeClosed": false,
-  "storeClosedMessage": "We've run out of herbs for this harvest window — check back soon!",
+  "storeClosedMessage": "We've run out of herbs for this harvest window, check back soon! ♥️",
   "hero": {
     "eyebrow": "Narangba, QLD · Est. 2025",
     "title": "Fresh herbs,",
@@ -99,9 +99,9 @@
       "id": 1,
       "name": "Basil",
       "emoji": "🌿",
-      "status": "gone",
+      "status": "limited",
       "quantity": "",
-      "stockQty": 0,
+      "stockQty": 1,
       "description": "Large, fragrant leaves perfect for caprese, pesto, or tossing fresh into pasta. The Italian classic.",
       "tip": "Pick from the top to encourage bushy growth.",
       "season": "In Season"
@@ -186,9 +186,9 @@
     {
       "name": "Red Chillis",
       "emoji": "🌶️ ",
-      "status": "gone",
+      "status": "limited",
       "quantity": "",
-      "stockQty": 0,
+      "stockQty": 7,
       "description": "Freshly harvested red chillis",
       "tip": "",
       "season": "",

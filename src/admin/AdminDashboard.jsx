@@ -74,7 +74,7 @@ function StoreEditor({ storeClosed, storeClosedMessage, onToggle, onSaveMessage,
   )
 }
 
-function ChangePasswordForm({ authHeaders, showToast }) {
+function ChangePasswordForm({ authHeaders, authFetch, showToast }) {
   const [form, setForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' })
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
@@ -88,7 +88,7 @@ function ChangePasswordForm({ authHeaders, showToast }) {
     }
     setSaving(true)
     try {
-      const res = await fetch('/api/change-password', {
+      const res = await authFetch('/api/change-password', {
         method: 'POST',
         headers: authHeaders,
         body: JSON.stringify({ currentPassword: form.currentPassword, newPassword: form.newPassword }),
@@ -165,6 +165,14 @@ export default function AdminDashboard() {
     'Authorization': `Bearer ${token}`,
   }
 
+  const authFetch = (url, options) => fetch(url, options).then(res => {
+    if (res.status === 401) {
+      logout()
+      return new Promise(() => {})
+    }
+    return res
+  })
+
   useEffect(() => {
     fetch('/api/data')
       .then(r => r.json())
@@ -180,7 +188,7 @@ export default function AdminDashboard() {
   const toggleStore = async () => {
     const newClosed = !siteData.storeClosed
     try {
-      const res = await fetch('/api/store-status', {
+      const res = await authFetch('/api/store-status', {
         method: 'PUT',
         headers: authHeaders,
         body: JSON.stringify({ storeClosed: newClosed }),
@@ -193,7 +201,7 @@ export default function AdminDashboard() {
 
   const saveStoreMessage = async (storeClosedMessage) => {
     try {
-      const res = await fetch('/api/store-status', {
+      const res = await authFetch('/api/store-status', {
         method: 'PUT',
         headers: authHeaders,
         body: JSON.stringify({ storeClosedMessage }),
@@ -207,7 +215,7 @@ export default function AdminDashboard() {
   const saveHero = async (hero) => {
     setSaving(true)
     try {
-      const res = await fetch('/api/hero', { method: 'PUT', headers: authHeaders, body: JSON.stringify(hero) })
+      const res = await authFetch('/api/hero', { method: 'PUT', headers: authHeaders, body: JSON.stringify(hero) })
       if (!res.ok) throw new Error()
       setSiteData(d => ({ ...d, hero }))
       showToast('Homepage text saved!')
@@ -218,7 +226,7 @@ export default function AdminDashboard() {
   const saveAbout = async (about) => {
     setSaving(true)
     try {
-      const res = await fetch('/api/about', { method: 'PUT', headers: authHeaders, body: JSON.stringify(about) })
+      const res = await authFetch('/api/about', { method: 'PUT', headers: authHeaders, body: JSON.stringify(about) })
       if (!res.ok) throw new Error()
       setSiteData(d => ({ ...d, about }))
       showToast('About section saved!')
@@ -230,7 +238,7 @@ export default function AdminDashboard() {
     const formData = new FormData()
     formData.append('photo', file)
     try {
-      const res = await fetch('/api/photos', {
+      const res = await authFetch('/api/photos', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData,
@@ -245,7 +253,7 @@ export default function AdminDashboard() {
   const savePhotos = async (photos) => {
     setSaving(true)
     try {
-      const res = await fetch('/api/photos', { method: 'PUT', headers: authHeaders, body: JSON.stringify(photos) })
+      const res = await authFetch('/api/photos', { method: 'PUT', headers: authHeaders, body: JSON.stringify(photos) })
       if (!res.ok) throw new Error()
       setSiteData(d => ({ ...d, photos }))
       showToast('Photos saved!')
@@ -255,7 +263,7 @@ export default function AdminDashboard() {
 
   const deletePhoto = async (id) => {
     try {
-      await fetch(`/api/photos/${id}`, { method: 'DELETE', headers: authHeaders })
+      await authFetch(`/api/photos/${id}`, { method: 'DELETE', headers: authHeaders })
       setSiteData(d => ({ ...d, photos: (d.photos || []).filter(p => p.id !== id) }))
       showToast('Photo deleted.')
     } catch { showToast('Error deleting photo.') }
@@ -265,7 +273,7 @@ export default function AdminDashboard() {
     const formData = new FormData()
     formData.append('photo', file)
     try {
-      const res = await fetch(`/api/${type}/${id}/photo`, {
+      const res = await authFetch(`/api/${type}/${id}/photo`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${token}` },
         body: formData,
@@ -282,7 +290,7 @@ export default function AdminDashboard() {
 
   const deleteItemPhoto = async (id, type) => {
     try {
-      await fetch(`/api/${type}/${id}/photo`, { method: 'DELETE', headers: authHeaders })
+      await authFetch(`/api/${type}/${id}/photo`, { method: 'DELETE', headers: authHeaders })
       setSiteData(d => ({ ...d, [type]: (d[type] || []).map(h => h.id === id ? { ...h, photo: undefined } : h) }))
       showToast('Photo removed.')
     } catch {
@@ -291,28 +299,34 @@ export default function AdminDashboard() {
   }
 
   const addOrchardItem = async (item) => {
-    const res = await fetch('/api/orchard', { method: 'POST', headers: authHeaders, body: JSON.stringify(item) })
-    const newItem = await res.json()
-    setSiteData(d => ({ ...d, orchard: [...(d.orchard || []), newItem] }))
-    showToast(`${newItem.name} added!`)
+    try {
+      const res = await authFetch('/api/orchard', { method: 'POST', headers: authHeaders, body: JSON.stringify(item) })
+      if (!res.ok) throw new Error()
+      const newItem = await res.json()
+      setSiteData(d => ({ ...d, orchard: [...(d.orchard || []), newItem] }))
+      showToast(`${newItem.name} added!`)
+    } catch { showToast('Error adding item. Try restarting the server.') }
   }
 
   const updateOrchardItem = async (id, updates) => {
-    const res = await fetch(`/api/orchard/${id}`, { method: 'PUT', headers: authHeaders, body: JSON.stringify(updates) })
-    const updated = await res.json()
-    setSiteData(d => ({ ...d, orchard: (d.orchard || []).map(h => h.id === id ? updated : h) }))
-    showToast('Item updated!')
+    try {
+      const res = await authFetch(`/api/orchard/${id}`, { method: 'PUT', headers: authHeaders, body: JSON.stringify(updates) })
+      if (!res.ok) throw new Error()
+      const updated = await res.json()
+      setSiteData(d => ({ ...d, orchard: (d.orchard || []).map(h => h.id === id ? updated : h) }))
+      showToast('Item updated!')
+    } catch { showToast('Error updating item.') }
   }
 
   const deleteOrchardItem = async (id) => {
-    await fetch(`/api/orchard/${id}`, { method: 'DELETE', headers: authHeaders })
+    await authFetch(`/api/orchard/${id}`, { method: 'DELETE', headers: authHeaders })
     setSiteData(d => ({ ...d, orchard: (d.orchard || []).filter(h => h.id !== id) }))
     showToast('Item removed.')
   }
 
   const addPantryItem = async (item) => {
     try {
-      const res = await fetch('/api/pantry', { method: 'POST', headers: authHeaders, body: JSON.stringify(item) })
+      const res = await authFetch('/api/pantry', { method: 'POST', headers: authHeaders, body: JSON.stringify(item) })
       if (!res.ok) throw new Error()
       const newItem = await res.json()
       setSiteData(d => ({ ...d, pantry: [...(d.pantry || []), newItem] }))
@@ -322,7 +336,7 @@ export default function AdminDashboard() {
 
   const updatePantryItem = async (id, updates) => {
     try {
-      const res = await fetch(`/api/pantry/${id}`, { method: 'PUT', headers: authHeaders, body: JSON.stringify(updates) })
+      const res = await authFetch(`/api/pantry/${id}`, { method: 'PUT', headers: authHeaders, body: JSON.stringify(updates) })
       if (!res.ok) throw new Error()
       const updated = await res.json()
       setSiteData(d => ({ ...d, pantry: (d.pantry || []).map(h => h.id === id ? updated : h) }))
@@ -332,28 +346,34 @@ export default function AdminDashboard() {
 
   const deletePantryItem = async (id) => {
     try {
-      await fetch(`/api/pantry/${id}`, { method: 'DELETE', headers: authHeaders })
+      await authFetch(`/api/pantry/${id}`, { method: 'DELETE', headers: authHeaders })
       setSiteData(d => ({ ...d, pantry: (d.pantry || []).filter(h => h.id !== id) }))
       showToast('Item removed.')
     } catch { showToast('Error removing item.') }
   }
 
   const addHerb = async (herb) => {
-    const res = await fetch('/api/herbs', { method: 'POST', headers: authHeaders, body: JSON.stringify(herb) })
-    const newHerb = await res.json()
-    setSiteData(d => ({ ...d, herbs: [...d.herbs, newHerb] }))
-    showToast(`${newHerb.name} added!`)
+    try {
+      const res = await authFetch('/api/herbs', { method: 'POST', headers: authHeaders, body: JSON.stringify(herb) })
+      if (!res.ok) throw new Error()
+      const newHerb = await res.json()
+      setSiteData(d => ({ ...d, herbs: [...d.herbs, newHerb] }))
+      showToast(`${newHerb.name} added!`)
+    } catch { showToast('Error adding herb. Try restarting the server.') }
   }
 
   const updateHerb = async (id, updates) => {
-    const res = await fetch(`/api/herbs/${id}`, { method: 'PUT', headers: authHeaders, body: JSON.stringify(updates) })
-    const updated = await res.json()
-    setSiteData(d => ({ ...d, herbs: d.herbs.map(h => h.id === id ? updated : h) }))
-    showToast('Herb updated!')
+    try {
+      const res = await authFetch(`/api/herbs/${id}`, { method: 'PUT', headers: authHeaders, body: JSON.stringify(updates) })
+      if (!res.ok) throw new Error()
+      const updated = await res.json()
+      setSiteData(d => ({ ...d, herbs: d.herbs.map(h => h.id === id ? updated : h) }))
+      showToast('Herb updated!')
+    } catch { showToast('Error updating herb.') }
   }
 
   const deleteHerb = async (id) => {
-    await fetch(`/api/herbs/${id}`, { method: 'DELETE', headers: authHeaders })
+    await authFetch(`/api/herbs/${id}`, { method: 'DELETE', headers: authHeaders })
     setSiteData(d => ({ ...d, herbs: d.herbs.filter(h => h.id !== id) }))
     showToast('Herb removed.')
   }
@@ -447,7 +467,7 @@ export default function AdminDashboard() {
           />
         )}
         {tab === 'security' && (
-          <ChangePasswordForm authHeaders={authHeaders} showToast={showToast} />
+          <ChangePasswordForm authHeaders={authHeaders} authFetch={authFetch} showToast={showToast} />
         )}
       </main>
 
