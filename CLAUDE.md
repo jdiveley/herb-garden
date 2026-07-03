@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Deployment status
+
+This folder (`herb-garden2_claude`) is the **LIVE** version of the app. The sibling folder `herb-garden2` is the test site. If instructions or context conflict between the two, `herb-garden2_claude` always takes priority.
+
 ## Commands
 
 ```bash
